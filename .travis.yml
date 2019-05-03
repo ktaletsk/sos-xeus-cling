@@ -16,14 +16,26 @@ before_install:
   - conda config --set always_yes yes --set changeps1 no
   - conda update -q conda
   - conda info -a
+  # downgrade python if needed
+  - conda create -n python_test python=$TRAVIS_PYTHON_VERSION anaconda
+  - source activate python_test
+  - pip install pyyaml psutil tqdm nose
+  - pip install fasteners pygments networkx pydot pydotplus
+  - pip install entrypoints jupyter coverage codacy-coverage pytest pytest-cov python-coveralls
+  - conda install pandas numpy
+
   # SoS Notebook
-  - sudo apt-get install libmagickwand-dev graphviz
-  - pip install jedi notebook nbconvert nbformat pyyaml psutil tqdm scipy
+  - sudo apt-get install libmagickwand-dev libmagickcore5-extra graphviz
+  - pip install jedi notebook nbconvert nbformat pyyaml psutil tqdm scipy imageio pillow selenium
   - pip install pygments ipython wand graphviz sos sos-notebook
   - python -m sos_notebook.install
+
+  # selenium
+  - wget https://chromedriver.storage.googleapis.com/74.0.3729.6/chromedriver_linux64.zip
+  - unzip chromedriver_linux64.zip -d $HOME/miniconda/bin
+  
   # xeus-cling
   - conda install xeus-cling xwidgets notebook xtensor xtl xframe -c conda-forge/label/gcc7
-  - pip install pytest pytest-cov nose
 
 sudo: required
 services:
